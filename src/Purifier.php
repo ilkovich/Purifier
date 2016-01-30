@@ -80,20 +80,20 @@ class Purifier
         if ($def = $config->maybeGetRawHTMLDefinition()) {
 
             if ($addElement = $this->config->get('purifier.addElement')) {
-                return array_map(function ($item) use($def) {
+                foreach($addElement as $item) {
                     call_user_func_array(array($def, "addElement"), $item);
-                }, $addElement);
+                };
             }
 
             if ($addAttribute = $this->config->get('purifier.addAttribute')) {
-                return array_map(function ($item) use($def) {
+                foreach($addAttribute as $item) {
                     call_user_func_array(array($def, "addAttribute"), $item);
-                }, $addAttribute);
+                };
             }
         }
 
         // Create HTMLPurifier object
-        $this->purifier = new HTMLPurifier($this->configure($config));
+        $this->purifier = new HTMLPurifier($config);
     }
 
     /**
@@ -108,15 +108,6 @@ class Purifier
                 $this->files->makeDirectory($cachePath);
             }
         }
-    }
-
-    /**
-     * @param HTMLPurifier_Config $config
-     * @return HTMLPurifier_Config
-     */
-    protected function configure(HTMLPurifier_Config $config)
-    {
-        return HTMLPurifier_Config::inherit($config);
     }
 
     /**
