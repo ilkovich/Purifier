@@ -1,5 +1,5 @@
 {
-	"name": "mews/purifier",
+	"name": "petercsoka/purifier",
 	"type": "package",
 	"description": "Laravel 5 HtmlPurifier Package",
 	"keywords": ["laravel5 HtmlPurifier", "laravel5 Purifier", "laravel5 Security", "HtmlPurifier", "Purifier", "security", "xss"],
@@ -10,6 +10,12 @@
 			"name": "Muharrem ERİN",
 			"email": "me@mewebstudio.com",
 			"homepage": "https://github.com/mewebstudio",
+			"role": "Developer"
+		},
+        {
+			"name": "Peter Csoka",
+			"email": "petercsoka@gmail.com",
+			"homepage": "https://github.com/petercsoka",
 			"role": "Developer"
 		}
 	],
