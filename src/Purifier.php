@@ -77,6 +77,21 @@ class Purifier
 
         $config->loadArray($this->getConfig());
 
+        if ($def = $config->maybeGetRawHTMLDefinition()) {
+
+            if ($addElement = $this->config->get('purifier.addElement')) {
+                return array_map(function ($item) use($def) {
+                    call_user_func_array(array($def, "addElement"), $item);
+                }, $addElement);
+            }
+
+            if ($addAttribute = $this->config->get('purifier.addAttribute')) {
+                return array_map(function ($item) use($def) {
+                    call_user_func_array(array($def, "addAttribute"), $item);
+                }, $addAttribute);
+            }
+        }
+
         // Create HTMLPurifier object
         $this->purifier = new HTMLPurifier($this->configure($config));
     }
@@ -134,15 +149,15 @@ class Purifier
      * @param null $config
      * @return mixed
      */
-    public function clean($dirty, $config = null)
+    public function clean($dirty)
     {
         if (is_array($dirty)) {
-            return array_map(function ($item) use ($config) {
-                return $this->clean($item, $config);
+            return array_map(function ($item) {
+                return $this->clean($item);
             }, $dirty);
         } else {
             //the htmlpurifier use replace instead merge, so we merge
-            return $this->purifier->purify($dirty, $this->getConfig($config));
+            return $this->purifier->purify($dirty);
         }
     }
 
