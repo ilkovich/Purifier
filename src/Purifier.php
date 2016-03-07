@@ -77,18 +77,24 @@ class Purifier
 
         $config->loadArray($this->getConfig());
 
-        if ($def = $config->maybeGetRawHTMLDefinition()) {
+        $addElement = $this->config->get('purifier.addElement');
+        $addAttribute = $this->config->get('purifier.addAttribute');
+        if(isset($addElement) || isset($addAttribute)) {
+            // Set some HTML5 properties
+            $config->set('HTML.DefinitionID', 'html5-definitions'); // unqiue id
+            $config->set('HTML.DefinitionRev', 1);
+            if ($def = $config->maybeGetRawHTMLDefinition()) {
+                if ($addElement) {
+                    foreach($addElement as $item) {
+                        call_user_func_array(array($def, "addElement"), $item);
+                    };
+                }
 
-            if ($addElement = $this->config->get('purifier.addElement')) {
-                foreach($addElement as $item) {
-                    call_user_func_array(array($def, "addElement"), $item);
-                };
-            }
-
-            if ($addAttribute = $this->config->get('purifier.addAttribute')) {
-                foreach($addAttribute as $item) {
-                    call_user_func_array(array($def, "addAttribute"), $item);
-                };
+                if ($addAttribute) {
+                    foreach($addAttribute as $item) {
+                        call_user_func_array(array($def, "addAttribute"), $item);
+                    };
+                }
             }
         }
 
@@ -148,7 +154,7 @@ class Purifier
             }, $dirty);
         } else {
             //the htmlpurifier use replace instead merge, so we merge
-            return $this->purifier->purify($dirty, $this->getConfig($config));
+            return $this->purifier->purify($dirty/*, $this->getConfig($config)*/);
         }
     }
 
